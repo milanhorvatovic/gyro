@@ -1,0 +1,7 @@
+{%- if attribute.has_default == true -%}
+	{%- if attribute.is_string == true -%}
+        "{{ attribute.default }}"
+	{%- else -%}
+		{{ attribute.default }}
+    {%- endif -%}
+{%- endif -%}

@@ -61,6 +61,7 @@ module Gyro
 
       def generate_entities(xcdatamodel)
         xcdatamodel.to_h['entities'].each do |entity|
+          # puts '<|' + entity.to_s + '|>'
           entity_context = { 'params' => @params, 'entity' => entity }
           # Rendering template using entity and params context
           output = render_entity(entity_context)

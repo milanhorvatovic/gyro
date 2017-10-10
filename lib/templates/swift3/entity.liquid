@@ -3,11 +3,12 @@
 import RealmSwift
 import Foundation
 
-final class {{ entity.name }}: Object {
-    {%- include 'inc/attributes_enum' -%}
-    {% include 'inc/relationships_enum' -%}
-    {% include 'inc/attributes_properties' %}
-    {% include 'inc/primary_key' -%}
-    {% include 'inc/indexed_properties' -%}
-    {% include 'inc/ignored_properties' %}
+final {% include 'inc/access_control_entity' -%} class {{ entity.name }}: {%- if entity.parent != null and entity.parent != '' %} {{ entity.parent }} {% else %} Object {% endif -%} {
+    {%- include 'inc/attributes_enum' %}
+    {%- include 'inc/relationships_enum' -%}
+    {%- include 'inc/attributes_properties' -%}
+    {%- include 'inc/primary_key' -%}
+    {%- include 'inc/indexed_properties' -%}
+    {%- include 'inc/ignored_properties' -%}
+	{%- include 'inc/whitespace_newline' -%}
 }

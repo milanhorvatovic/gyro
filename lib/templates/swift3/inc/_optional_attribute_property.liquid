@@ -1,5 +1,13 @@
-{%- if attribute.is_number == true or attribute.is_bool == true %}
-  let {{ attribute.name }} = RealmOptional<{{ convert_type }}>()
-{%- else %}
-  dynamic var {{ attribute.name }}: {{ convert_type }}?
+{%- capture default_value -%}
+	{%- include 'inc/default_optional_value_converter' -%}
+{%- endcapture -%}
+
+{%- if attribute.is_number == true or attribute.is_bool == true -%}
+	{%- include 'inc/whitespace_tab' -%}{%- include 'inc/access_control_attribute' -%} let {{ attribute.name }}: RealmOptional<{{ convert_type }}> = RealmOptional<{{ convert_type }}>({{ default_value }})
+{%- else -%}
+	{%- if attribute.has_default == true -%}
+		{%- include 'inc/whitespace_tab' -%}{%- include 'inc/access_control_attribute' -%} dynamic var {{ attribute.name }}: {{ convert_type }}? = {{ default_value }}
+	{%- else -%}
+		{%- include 'inc/whitespace_tab' -%}{%- include 'inc/access_control_attribute' -%} dynamic var {{ attribute.name }}: {{ convert_type }}?
+	{%- endif -%}
 {%- endif -%}

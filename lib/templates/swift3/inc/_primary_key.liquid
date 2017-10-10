@@ -1,5 +1,9 @@
-{%- if entity.has_primary_key == true %}
-  override static func primaryKey() -> String? {
-    return "{{ entity.identity_attribute }}"
-  }
-{% endif -%}
+{%- if entity.has_primary_key == true -%}
+{%- include 'inc/whitespace_newline' -%}
+{%- include 'inc/whitespace_newline' -%}
+{%- include 'inc/whitespace_tab' -%}
+	override static func primaryKey() -> String? {
+		return "{{ entity.identity_attribute }}"
+	}
+{%- include 'inc/whitespace_newline' -%}
+{%- endif -%}
