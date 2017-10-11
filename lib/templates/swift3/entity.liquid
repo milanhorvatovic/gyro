@@ -4,6 +4,15 @@ import RealmSwift
 import Foundation
 
 final {% include 'inc/access_control_entity' -%} class {{ entity.name }}: {%- if entity.parent != null and entity.parent != '' %} {{ entity.parent }} {% else %} Object {% endif -%} {
+	
+	{%- if entity.has_attributes == true -%}
+		{%- for attribute in entity.attributes -%}
+			{%- if attribute.has_enum == true and attribute.enum.is_embedded == true -%}
+				{%- include 'inc/enum' -%}
+			{%- endif-%}
+		{%- endfor -%}
+	{%- endif -%}
+
     {%- include 'inc/attributes_enum' %}
     {%- include 'inc/relationships_enum' -%}
     {%- include 'inc/attributes_properties' -%}

@@ -23,8 +23,9 @@ module Gyro
 			# One Attribute in an Entity of the xcdatamodel
 			#
 			class Attribute
+
 				attr_accessor :entity_name, :access_control, :name, :type, :custom_type, :optional, :indexed, :default
-				attr_accessor :realm_ignored, :realm_read_only, :enum_name, :enum_type, :enum_keys, :enum_values, :enum
+				attr_accessor :realm_ignored, :realm_read_only, :enum				
 				attr_accessor :json_key_path, :json_values, :transformer, :comment, :support_annotation
 
 				alias optional? optional
@@ -72,18 +73,17 @@ module Gyro
 						'default' => default,
 						'realm_ignored' => realm_ignored, 'realm_read_only' => realm_read_only,
 						'enum' => enum.to_h,
-						'enum_type' => enum_type, 'enum_values' => enum_values,
 						'json_key_path' => json_key_path, 'json_values' => json_values,
 						'transformer' => transformer, 'need_transformer' => need_transformer?,
 						'comment' => comment,
 						'support_annotation' => support_annotation,
-						'is_custom_type' => custom_type?, 'is_decimal' => decimal?, 'is_integer' => integer?, 'is_number' => number?, 'is_bool' => bool?, 'is_string' => string?, 'has_default' => default?
+						'is_custom_type' => custom_type?, 'is_decimal' => decimal?, 'is_integer' => integer?, 'is_number' => number?, 'is_bool' => bool?, 'is_string' => string?, 'has_default' => default?, 'has_enum' => enum?
 					}
 				end
 				# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
 
 				def enum?
-					!@enum_type.empty?
+					!@enum.nil?
 				end
 
 				def read_only?

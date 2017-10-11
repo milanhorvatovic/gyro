@@ -7,7 +7,8 @@ module Gyro
 			# One Enum in an Attribute of Entity of the xcdatamodel
 			#
 			class Enum
-				attr_accessor :attribute_name, :name, :type, :values
+
+				attr_accessor :attribute_name, :name, :type, :embedded, :values
 				
 				# rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 				def initialize(attribute_xml, attribute_name)
@@ -19,8 +20,9 @@ module Gyro
 					@attribute_name = attribute_name
 					@name = Gyro::Parser::XCDataModel.user_info(attribute_xml, 'enumName')
 					@type = Gyro::Parser::XCDataModel.user_info(attribute_xml, 'enumType')
+					@embedded = Gyro::Parser::XCDataModel.user_info(attribute_xml, 'enumEmbedded') == 'YES'
 					@type = 'string' if @type.nil? || @type.empty?
-					@values = Gyro::Parser::XCDataModel.user_info(attribute_xml, 'enumValues').split(',').map(&:strip).map!{ |pair| EnumElement.new(pair) }
+					@values = Gyro::Parser::XCDataModel.user_info(attribute_xml, 'enumValues').split(',').map(&:strip).map!{ |pair| EnumElement.new(self, pair) }
 
 					search_for_error
 				end
@@ -29,7 +31,8 @@ module Gyro
 					{
 						'name' => @name,
 						'type' => @type.to_s,
-						'values' => @values.map { |value| value.to_h }
+						'values' => @values.map { |value| value.to_h },
+						'is_embedded' => @embedded
 					}
 				end
 				# rubocop:enable Metrics/AbcSize, Metrics/MethodLength
@@ -62,9 +65,11 @@ module Gyro
 			end
 
 			class EnumElement
-				attr_accessor :key, :value
 
-				def initialize(enum_value)
+				attr_accessor :enum_type, :key, :value
+
+				def initialize(enum, enum_value)
+					@enum_type = enum.type
 					pairs = enum_value.split(':').map(&:strip)
 					if pairs.size == 2
 						
@@ -94,6 +99,7 @@ module Gyro
 					{
 						'key' => @key,
 						'value' => @value.to_s,
+						'value_formatted' => (((@enum_type =~ /^int|integer|interger32|integer64$/i).nil? == false) ? @value.to_s : "\"" + @value.to_s + "\""), 
 						'is_number' => number?,
 						'is_string' => string?
 					}

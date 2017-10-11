@@ -12,7 +12,7 @@
         {%- endcapture -%}
 
         {%- if attribute.realm_read_only.size == 0 -%}
-            {%- if attribute.enum_values.size > 0 -%}
+            {%- if attribute.has_enum == true -%}
                 {%- comment -%} ******* GENERATE ENUM ATTRIBUTE PROPERTY ******* {%- endcomment -%}
                 {%- include 'inc/enum_attribute_property' -%}
             {%- else -%}

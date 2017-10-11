@@ -1,0 +1,20 @@
+{%- if attribute.has_enum == true -%}
+	{%- capture indent -%}
+		{%- if attribute.enum.is_embedded == true -%}
+			{%- include 'inc/whitespace_tab' -%}
+		{%- endif -%}
+	{%- endcapture -%}
+	{%- capture indent_case -%}
+		{{ indent }}
+		{%- include 'inc/whitespace_tab' -%}
+	{%- endcapture -%}
+
+	{%- include 'inc/whitespace_newline' -%}
+	{%- include 'inc/whitespace_newline' -%}
+	{{ indent }}{%- include 'inc/access_control_attribute' -%}enum {{ params.prefix }}{{ attribute.enum.name }}: String {
+		{%- for value in attribute.enum.values -%}
+			{%- include 'inc/whitespace_newline' -%}
+			{{ indent_case }}case {{ value.key }} = {{ value.value_formatted }}
+		{%- endfor -%}
+	{%- include 'inc/whitespace_newline' -%}{{ indent }}}
+{%- endif -%}

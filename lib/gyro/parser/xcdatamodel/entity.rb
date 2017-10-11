@@ -137,7 +137,7 @@ module Gyro
 				end
 
 				def enum_attributes?
-					@attributes.any? { |_, attribute| !attribute.enum_type.empty? }
+					@attributes.any? { |_, attribute| !attribute.enum.nil? }
 				end
 
 				def transformers
@@ -163,7 +163,7 @@ module Gyro
 				NUMBER_TYPES = %i[integer_16 integer_32 integer_64 decimal double float].freeze
 				def number_attributes?
 					@attributes.any? do |_, attribute|
-						attribute.enum_type.empty? && NUMBER_TYPES.include?(attribute.type)
+						attribute.enum.nil? && NUMBER_TYPES.include?(attribute.type)
 					end
 				end
 
@@ -203,7 +203,7 @@ module Gyro
 				end
 
 			end
-			
+
 		end
 
 	end

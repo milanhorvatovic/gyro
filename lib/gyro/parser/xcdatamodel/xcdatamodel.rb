@@ -15,53 +15,61 @@
 include REXML
 
 module Gyro
-  module Parser
-    # Parser for CoreData's xcdatamodel files
-    #
-    module XCDataModel
-      def self.find_in_dir(dir)
-        Dir.chdir(dir) do
-          files = Dir.glob('*.xcdatamodel')
-          files.first.nil? ? nil : File.expand_path(files.first, dir)
-        end
-      end
 
-      def self.user_info(xml, key)
-        XPath.first(xml, "userInfo/entry[@key='#{key}']/@value").to_s
-      end
+	module Parser
 
-      # Represents the whole xcdatamodel file struture, once parsed
-      #
-      class XCDataModel
-        attr_accessor :entities
+		# Parser for CoreData's xcdatamodel files
+		#
+		module XCDataModel
 
-        def initialize(xcdatamodel_dir)
-          contents_file = File.join(xcdatamodel_dir, 'contents')
-          Gyro::Log.fail!('Unable to find contents of xcdatamodel', stacktrace: true) unless File.exist?(contents_file)
-          @entities = {}
-          file = File.open(contents_file)
-          document_xml = Document.new(file)
-          file.close
-          load_entities(document_xml)
-        end
+			def self.find_in_dir(dir)
+				Dir.chdir(dir) do
+				files = Dir.glob('*.xcdatamodel')
+				files.first.nil? ? nil : File.expand_path(files.first, dir)
+				end
+			end
 
-        def to_h
-          { 'entities' => entities.values.map(&:to_h) }
-        end
+			def self.user_info(xml, key)
+				XPath.first(xml, "userInfo/entry[@key='#{key}']/@value").to_s
+			end
 
-        def to_s
-          @entities.values.map(&:to_s).join
-        end
+			# Represents the whole xcdatamodel file struture, once parsed
+			#
+			class XCDataModel
+				
+				attr_accessor :entities
 
-        private
+				def initialize(xcdatamodel_dir)
+					contents_file = File.join(xcdatamodel_dir, 'contents')
+					Gyro::Log.fail!('Unable to find contents of xcdatamodel', stacktrace: true) unless File.exist?(contents_file)
+					@entities = {}
+					file = File.open(contents_file)
+					document_xml = Document.new(file)
+					file.close
+					load_entities(document_xml)
+				end
 
-        def load_entities(document_xml)
-          document_xml.root.each_element('//entity') do |node|
-            entity = Entity.new(node)
-            @entities[entity.name] = entity
-          end
-        end
-      end
-    end
-  end
+				def to_h
+					{ 'entities' => entities.values.map(&:to_h) }
+				end
+
+				def to_s
+					@entities.values.map(&:to_s).join
+				end
+
+				private
+
+				def load_entities(document_xml)
+					document_xml.root.each_element('//entity') do |node|
+					entity = Entity.new(node)
+					@entities[entity.name] = entity
+					end
+				end
+
+			end
+
+		end
+	
+	end
+
 end
